@@ -1,0 +1,11 @@
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
+storage/
+.env
+.idea/
+.claude/
+chinese-poetry/
+requirements.lock.txt
+uvicorn.*.log
