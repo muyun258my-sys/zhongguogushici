@@ -6,14 +6,13 @@ if (-not (Test-Path $pythonExe)) {
     throw "Virtual environment Python was not found at: $pythonExe"
 }
 
-$stdoutLog = Join-Path $projectRoot "uvicorn.out.log"
-$stderrLog = Join-Path $projectRoot "uvicorn.err.log"
-$command = "cd /d `"$projectRoot`" && `"$pythonExe`" -m uvicorn app.main:app --host 127.0.0.1 --port 8000 > `"$stdoutLog`" 2> `"$stderrLog`""
-
 $process = Start-Process `
-    -FilePath "cmd.exe" `
-    -ArgumentList @("/c", "start", "`"poetry-assistant`"", "/min", "cmd.exe", "/k", $command) `
+    -FilePath $pythonExe `
+    -ArgumentList @("-m", "uvicorn", "app.main:app", "--host", "127.0.0.1", "--port", "8000", "--reload") `
+    -WorkingDirectory $projectRoot `
+    -WindowStyle Hidden `
     -PassThru
 
-Write-Output "Started launcher PID $($process.Id)"
+Set-Content -Path (Join-Path $projectRoot "uvicorn.pid") -Value $process.Id
+Write-Output "Started server PID $($process.Id)"
 Write-Output "URL: http://127.0.0.1:8000"

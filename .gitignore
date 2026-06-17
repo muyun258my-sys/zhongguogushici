@@ -3,6 +3,7 @@ __pycache__/
 .venv/
 venv/
 storage/
+models/
 .env
 .idea/
 .claude/

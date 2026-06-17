@@ -14,6 +14,19 @@ class PoetryVectorStore:
         self.settings = settings
 
     def _build_embeddings(self):
+        if self.settings.embedding_provider == "local":
+            from langchain_huggingface import HuggingFaceEmbeddings
+
+            cache_dir = Path(self.settings.local_embedding_cache_dir)
+            model_path = cache_dir / self.settings.local_embedding_model.replace("/", "--")
+            model_name = str(model_path) if model_path.exists() else self.settings.local_embedding_model
+
+            return HuggingFaceEmbeddings(
+                model_name=model_name,
+                cache_folder=str(cache_dir),
+                encode_kwargs={"normalize_embeddings": True},
+            )
+
         if not self.settings.llm_enabled:
             return None
 
